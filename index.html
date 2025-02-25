@@ -1,0 +1,2205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>국가유산기본법령 모의고사</title>
+    <!-- 구글 폰트 추가 -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- 부트스트랩 CSS 추가 -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- 부트스트랩 JS 및 제이쿼리 추가 -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Gowun+Dodum&display=swap');
+
+        * {
+            font-family: "Gowun Dodum", sans-serif;
+            color: black;
+        }
+
+        body {
+            background-color: #e0e0e0;
+            /* 전체 배경 명암 처리 */
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            margin: 0;
+            padding-top: 20px;
+        }
+
+        /* 전체 컨테이너 */
+        .container {
+            width: 25cm;
+            /* 전체 시험지 크기 */
+            background-color: white;
+            /* 시험지 영역을 화이트로 */
+            margin: 0 auto;
+            /* 중앙 정렬 */
+            padding: 50px;
+            box-sizing: border-box;
+        }
+
+        /* 페이지 하단의 이전/다음 버튼 */
+        .footer {
+            position: absolute;
+            bottom: -60px;
+            /* 문제지 박스 외곽 경계선 아래에 위치 */
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 10px;
+            /* 버튼과 좌우 화면 끝 사이 간격 */
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            width: auto;
+            /* 버튼의 너비가 경계선을 넘지 않게 자동으로 조정 */
+        }
+
+        /* 헤드 영역 */
+        .header {
+            width: 100%;
+            max-width: 24cm;
+            /* 18cm로 고정된 시험지 폭 */
+            height: 50px;
+            border: 2px solid black;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 8px;
+            /* 상단 패딩 */
+
+            box-sizing: border-box;
+            background-color: rgba(220, 220, 220, 0.5);
+            /* 약한 회색 배경 */
+            line-height: 50px;
+        }
+
+        .left-header {
+            padding-left: 20px;
+            /* 좌측 텍스트를 안으로 넣음 */
+        }
+
+        .right-header {
+            padding-right: 40px;
+            /* 우측 텍스트를 안으로 넣음 */
+        }
+
+        /* 문제 영역의 좌우 배치 대신 위아래 배치 */
+        .problem-area {
+            width: 22cm;
+            border: none;
+            /* 외곽 경계선 제거 */
+            padding: 40px;
+            box-sizing: border-box;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            /* 세로 방향으로 배치 */
+            position: relative;
+            font-size: 18px !important;
+        }
+
+        /* 문제 영역에 임시 배경 컬러 추가 */
+        .question {
+            margin-bottom: 15px !important;
+            /* 질문지와 질문지 사이 간격 줄이기 */
+            padding: 13px;
+            background-color: transparent;
+            /* 문제 내부는 흰색으로 강조 */
+
+            box-sizing: border-box;
+        }
+
+        /* 질문 텍스트 줄바꿈 설정 */
+        .question p {
+            margin: 15px;
+            /* 질문지와 답지 사이 간격 줄이기 */
+            text-indent: -1em;
+            /* 질문 번호 바로 아래에서 시작되지 않도록 */
+            padding-left: 0.5em;
+            /* 첫 줄 이후 줄 시작을 동일하게 맞춤 */
+        }
+
+        .choices {
+            margin-top: 0px !important;
+            /* 질문지와 답지 사이 간격을 줄이기 */
+        }
+
+        /* 선택지 텍스트 줄바꿈 설정 */
+        .choices .choice {
+            text-indent: -1.5em;
+            /* 선택지 번호 바로 아래에서 줄이 시작되지 않도록 */
+            padding-left: 2em;
+            /* 첫 줄 이후 줄 시작을 동일하게 맞춤 */
+            margin-bottom: 7px;
+        }
+
+        /* 선택지 버튼 활성화 */
+        .choice-button {
+            width: 30px;
+            /* 선택지 버튼의 넓이 */
+            height: 30px;
+            /* 선택지 버튼의 높이 */
+            line-height: 30px;
+            /* 텍스트를 중앙에 배치 */
+            text-align: center;
+            /* 텍스트 중앙 정렬 */
+            border-radius: 50%;
+            /* 둥근 버튼 */
+            padding: 0;
+            /* 추가 여백 없음 */
+            margin-right: 5px;
+            /* 선택지 텍스트와의 간격 */
+            cursor: pointer;
+            box-sizing: border-box;
+            /* 테두리와 내부 여백을 포함한 크기 정의 */
+        }
+
+        /* 버튼에 마우스를 올렸을 때 투명한 원형 실선 유지 */
+        .choice-button:hover {
+            border-color: transparent;
+            /* 여전히 투명 */
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.4);
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 13cm;
+            /* 가로 13cm */
+            height: 7cm;
+            /* 세로 7cm */
+            border-radius: 10px;
+            /* 각 모서리 레디우스 10px */
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            /* 상단 약한 명암 처리 */
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            /* 좌우 정렬 */
+            align-items: center;
+            /* 내용 수직 중앙 정렬 */
+            font-size: 20px;
+            /* 상단 폰트 크기 */
+            font-weight: bold;
+            padding-bottom: 10px;
+            border-bottom: 1px solid lightgray;
+            /* 상단 구분선 */
+            height: 40px;
+            /* 상단의 높이 고정 */
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            /* 확인 버튼 우측 정렬 */
+            border-top: none;
+            /* 보이지 않게 투명 처리 */
+        }
+
+        .modal-body {
+            padding: 6px;
+            font-size: 16px;
+            /* 텍스트 폰트 크기 */
+            line-height: 1.5;
+            /* 줄 간격 설정 */
+        }
+
+        button.confirm-button {
+            width: 50px;
+            /* 버튼의 너비 */
+            height: 30px;
+            /* 버튼의 높이 */
+            padding: 3px 3px;
+            /* 내부 여백 조정 */
+            margin: 0;
+            /* 외부 여백 제거 */
+            line-height: normal;
+            /* 텍스트가 중앙에 위치하도록 */
+            border-radius: 10px;
+            /* 모서리 둥글게 */
+            background-color: rgb(161, 160, 160);
+            /* 버튼 배경색 (녹색) */
+            color: white;
+            /* 버튼 글씨색 */
+            font-size: 16px;
+            /* 폰트 크기 */
+            border: none;
+            /* 테두리 제거 */
+            cursor: pointer;
+            /* 커서 모양 변경 */
+        }
+
+        button.confirm-button:hover {
+            background-color: #45a049;
+            /* 마우스 오버 시 버튼 색상 */
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+    <script>
+        function openAnswerModal(isCorrect, modalId) {
+            // 정답 여부 설정
+            const answerText = document.getElementById(modalId).querySelector('#answerText');
+            answerText.textContent = isCorrect ? '정답입니다!' : '오답입니다.';
+
+            // 모달창 열기
+            document.getElementById(modalId).style.display = "block";
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = "none";
+        }
+
+        function goToPreviousPage() {
+            window.location.href = 'https://2024mo-test.github.io/mj-part/mj4.html'; // 이전 페이지의 URL
+        }
+
+        function goToNextPage() {
+            window.location.href = 'https://blog.naver.com/lhj5268'; // 다음 페이지의 URL
+        }
+    </script>
+
+</head>
+
+<body>
+
+    <!-- 전체 컨테이너 -->
+    <div class="container">
+        <!-- 헤드 영역 -->
+        <div class="header">
+            <div class="left-header">
+                <h1 style="font-size: 24px; font-weight: 550; line-height: normal;">국가유산관련법령 실전 모의고사 </h1>
+                <!-- 수동 입력 -->
+            </div>
+            <div class="right-header">
+                <h3 style="font-size: 20px; line-height: normal;"> 제 3 회</h3> <!-- 수동 입력 -->
+            </div>
+        </div>
+        <!-- 문제 영역 -->
+        <div class="problem-area">
+            <!-- 좌측 문제 칸 -->
+            <div class="left-column">
+                <!-- 문제 영역 -->
+                <div class="question">
+                    <p>1. 문화유산의 보존 및 활용에 관한 법령상 유형문화유산의 대상이 아닌 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1')">①</span> 건조물
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1')">②</span>
+                            고고자료(考古資料)
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal1')">③</span> 풍속이나
+                            관습에 사용되는 의복, 기구, 가옥
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1')">④</span> 조각,
+                            공예품
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal1" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal1')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 제2조 제1항 제4호 <br> 4. 민속문화유산: 의식주, 생업, 신앙, 연중행사 등에
+                                관한 풍속이나 관습에 사용되는 의복, 기구, 가옥 등으로서 국민생활의 변화를 이해하는 데 반드시 필요한 것 </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역 -->
+                <div class="question">
+                    <p>2. 문화유산의 보존 및 활용에 관한 법령상 문화유산 관리 등 업무를 위한 전문인력의 배치에 관한 내용으로 옳은 것은?
+                    </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal2')">①</span>
+                            지방자치단체의 장은 해당 기관의 문화유산 업무를 수행할 전담부서를 설치하고 문화유산전담관을 위촉하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal2' )">②</span> 전담부서에
+                            배치되는 전문인력은 문화유산 관련 업무를 1년 6개월 이상 수행한 공무원이어야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal2')">③</span> 전문인력의
+                            배치에 관한 사항은 문화유산기본계획에 포함된다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal2')">④</span> 문화유산 관리
+                            전문인력은 「한국전통문화대학교 설치법」 에 따른 전통문화전문과정을 이수해야 한다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal2" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal2')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 시행령 제2조의2 제5항 <br> ⑤ 문화유산 관리 전문인력은 해당 지방자치단체의 장이
+                                정하는 바에 따라 「한국전통문화대학교 설치법」 제14조제2항에 따른 전통문화전문과정을 이수해야 한다.
+                            </p>
+                            <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역 -->
+                <div class="question">
+                    <p>3. 문화유산의 보존 및 활용에 관한 법령상 금연구역의 지정 등에 관한 설명으로 옳지 않은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3')">①</span> 금연구역의
+                            지정은 지정문화유산 및 등록문화유산과 그 보호물ㆍ보호구역 및 보관시설 등 해당 시설 또는 지역 전체가 대상이다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3' )">②</span> 금연구역과
+                            흡연구역을 알리는 표지는 지정문화유산등의 소유자, 관리자 또는 관리단체가 설치하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3')">③</span> 시ㆍ도지사는
+                            금연구역과 흡연구역을 알리는 표지를 설치하지 아니한 자에 대하여 일정한 기간을 정하여 그 시정을 명할 수 있다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal3')">④</span> 흡연구역에는
+                            해당 시설 또는 지역을 이용하는 사람이 잘 볼 수 있는 위치에 흡연구역임을 나타내는 표지판을 달거나 부착하여야 하며 표지판의 바탕은 흰색 또는 노란색으로, 그 글씨는
+                            붉은색 또는 주황색으로 하여야 한다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal3" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal3')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 시행규칙 제3조2 <br> (금연구역 등을 알리는 표지의 설치 기준 및 방법) 법
+                                제14조의4제2항에 따른 금연구역과 흡연구역을 알리는 표지의 설치 기준 및 방법은 별표 1의2와 같다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>4. 문화유산의 보존 및 활용에 관한 법령상 국가지정문화유산의 보호물 또는 보호구역의 지정 등에 관한 설명으로 옳지 않은 것은?
+                    </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal4')">①</span>
+                            국가유산청장은 인위적 또는 자연적 조건의 변화 등으로 인하여 조정이 필요하다고 인정하면 지정된 보호물 또는 보호구역을 조정할 수 있다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal4' )">②</span> 보호구역의
+                            지정은 국가지정문화유산의 재예고 및 재지정 절차가 준용되지 않는다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal4')">③</span> 보호물이
+                            보호책ㆍ담장 등으로 되어 있는 경우의 보호구역 지정기준은 그 하부 경계에서 2미터부터 20미터까지이다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal4')">④</span> 시ㆍ도지사는
+                            보호물 또는 보호구역의 지정기준을 확대하거나 축소할 수 있다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal4" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal4')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 시행령 제13조 제2항 <br> ② 국가유산청장은 자연적 조건, 인위적 조건, 그 밖의
+                                특수한 사정이 있어 특히 필요하다고 인정하면 제1항에 따른 보호물 또는 보호구역의 지정기준을 확대하거나 축소할 수 있다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>5. 문화유산의 보존 및 활용에 관한 법령상 국가지정문화유산의 공개를 제한하는 경우 관보에 고시하여야 하는 사항에 해당하지 않은 것은?
+                    </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal5')">①</span> 해당
+                            국가지정문화유산의 종류, 명칭 및 소재지
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal5' )">②</span> 해당
+                            문화유산의 소유자(관리단체가 지정되어 있으면 그 관리단체를 말한다)의 의견
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal5')">③</span> 공개 제한
+                            위반 시의 제재 내용
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal5')">④</span> 추가적인
+                            정보를 제공하는 인터넷 홈페이지의 주소
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal5" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal5')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 시행규칙 제30조 제1항 <br> (국가지정문화유산의 공개 제한의 고시 등) ①
+                                국가유산청장은 법 제48조제3항에 따라 국가지정문화유산의 공개를 제한하면 다음 각 호의 사항을 관보에 고시해야 한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>6. 문화유산의 보존 및 활용에 관한 법령상 1차 위반 시 지정이 취소되는 지역문화유산돌봄센터의 위반행위는? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal6')">①</span> 국가 및
+                            지방자치단체에서 지원한 예산을 부당하게 집행하거나 목적과 다르게 집행한 경우
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal6' )">②</span>
+                            지역문화유산돌봄센터가 지정기준에 적합한 기관 또는 단체가 아닌 경우
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal6')">③</span>
+                            지역문화유산돌봄센터가 정당한 사유 없이 사업계획서의 내용과 다르게 사업을 실시하는 경우
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal6')">④</span>
+                            문화유산돌봄사업을 하는 중에 지정문화유산을 파손하거나 원형을 훼손한 경우
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal6" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal6')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 시행령 제41조의6 제1항 <br> (지역문화유산돌봄센터의 지정취소) ① 법
+                                제80조의5제2항에 따른 지역문화유산돌봄센터의 지정취소 기준은 별표 3의2와 같다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>7. 문화유산의 보존 및 활용에 관한 법령상 관리행위 방해 등의 죄에 해당하지 않은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal7')">①</span> 허가없이
+                            국가지정문화유산을 탁본 또는 영인(影印: 원본을 사진 등의 방법으로 복제하는 것)하는 행위
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal7' )">②</span>
+                            국가유산청장의 공개 제한을 위반하여 허가를 받지 아니하고 출입하는 행위
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal7')">③</span> 허가없이
+                            국가지정문화유산에 보호울타리를 설치하는 행위
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal7')">④</span>
+                            지정문화유산이나 임시지정문화유산의 관리ㆍ보존에 책임이 있는 자 중 중대한 과실로 인하여 해당 문화유산을 멸실 또는 훼손하게 한 자
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal7" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal7')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 제99조의 제1항 제1호 <br> 1. (무허가 행위 등의 죄) 제35조제1항제1호 또는
+                                제2호를 위반하여 지정문화유산(보호물 및 보호구역을 포함한다)이나 임시지정문화유산의 현상을 변경하거나 그 보존에 영향을 미칠 우려가 있는 행위를 한 자
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>8. 자연유산의 보존 및 활용에 관한 법령상 자연유산위원회의 구성 등에 관한 내용으로 옳지 않은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal8')">①</span>
+                            자연유산위원회는 위원장 1명, 부위원장 1명을 포함하여 30명 이내의 위원으로 구성하고, 위원의 임기는 2년으로 하되 연임할 수 있다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal8' )">②</span>
+                            자연유산위원회에 두는 전문위원의 수는 50명 이내로 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal8')">③</span>
+                            지질ㆍ지형유산분과위원회는 「매장유산 보호 및 조사에 관한 법률」제2조제3호에 해당하는 매장유산에 관한 사항을 포함한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal8')">④</span> 분과위원회는
+                            각각 소위원회를 구성ㆍ운영할 수 있다. 이 경우 소위원회 위원은 국가유산청장이 지명한다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal8" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal8')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 자연유산의 보존 및 활용에 관한 법률 시행령 제11조 <br> (소위원회의 구성ㆍ운영) 자연유산위원회는 전문적ㆍ효율적 심의를
+                                위하여 필요하다고 인정하는 경우에는 소위원회를 구성ㆍ운영할 수 있다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>9. 자연유산의 보존 및 활용에 관한 법령상 천연기념물인 동물의 관리 등에 관한 설명으로 옳지 않은 것은?
+                    </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal9')">①</span> 천연기념물인
+                            동물의 소유자등은 해당 동물의 연도별 질병관리계획을 매년 1월 31일까지 국가유산청장에게 제출하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal9' )">②</span> 천연기념물
+                            동물치료소의 운영자는 해당 동물의 긴급한 보호 또는 치료가 필요한 경우에는 먼저 치료한 후 지체 없이 그 결과를 국가유산청장, 시ㆍ도지사 및 시장ㆍ군수ㆍ구청장에게
+                            보고하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal9')">③</span> 분산 사육을
+                            위탁받은 기관이 해당 목적을 위하여 천연기념물인 동물을 관리구역 외로 반출하고자 하는 경우에는 시ㆍ도지사의 허가는 받지 않아도 된다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal9')">④</span> 가축전염병에
+                            걸려 천연기념물인 동물의 살처분 명령을 받은 경우 그 소유자등은 전염병 예방접종을 이유로 해당 시장ㆍ군수ㆍ구청장에게 살처분의 제외 또는 연기를 요청할 수 있다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal9" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal9')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 자연유산의 보존 및 활용에 관한 법률 제31조 제5항 <br> ⑤ 국가유산청장은 천연기념물인 동물이 「가축전염병 예방법」
+                                제2조제2호의 가축전염병에 걸려 천연기념물인 동물의 소유자등이 같은 법 제20조에 따른 살처분 명령을 받았음에도 불구하고 다음 각 호의 어느 하나에 해당하는
+                                경우에는 해당 시장ㆍ군수ㆍ구청장에게 살처분의 제외 또는 연기를 요청할 수 있다. 이 경우 요청을 받은 시장ㆍ군수ㆍ구청장은 특별한 사정이 없는 한 이에 따라야
+                                한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>10. 국가유산수리 등에 관한 법령상 국가유산수리의 대상에 관한 설명으로 옳지 않은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal10')">①</span>
+                            천연기념물과 함께 전통문화를 구현ㆍ형성하고 있는 주위의 시설물은 보수의 대상이다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal10' )">②</span>
+                            임시지정문화유산을 둘러싸고 있는 보호구역 안의 조경은 정비 대상에 포함된다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal10')">③</span> 사적을
+                            둘러싸고 있는 보호구역 안의 시설물은 복원할 수 있다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal10')">④</span> 관리단체가
+                            관리하고 있는 지정문화유산을 둘러싸고 있는 토지 내에서 해당 문화유산의 보존 및 활용을 위하여 필요한 시설물 또는 조경은 손상방지를 위한 조치를 할 수 있다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal10" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal10')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 국가유산수리 등에 관한 법률 시행령 제2조 제1호 <br> 1. 「문화유산의 보존 및 활용에 관한 법률」 제2조제3항에 따른
+                                지정문화유산(같은 법 제32조에 따른 임시지정문화유산을 포함하며, 같은 법 제25조에 따른 사적은 제외한다. 이하 이 조에서 같다)을 둘러싸고 있는 보호구역
+                                안의 시설물 또는 조경
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역 -->
+                <div class="question">
+                    <p>11. 국가유산수리 등에 관한 법령상 성실의무에 준하는 사항으로서 국가유산의 원형을 보존하고 국가유산수리의 품질을 향상시키기 위하여 필요하다고 인정하여 문화체육관광부령으로
+                        정하는 사항에 해당하는 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal11')">①</span>
+                            국가유산수리등의 업무를 신의와 성실로써 수행할 것
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal11')">②</span>
+                            국가유산수리등의 기준에 맞게 국가유산수리등의 업무를 수행할 것
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal11')">③</span>
+                            국가유산수리등의 업무를 인문학적ㆍ과학적 조사 및 분석을 통해 수립된 보존처리계획에 따라 수행할 것
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal11')">④</span>
+                            국가유산수리등의 보고서를 성실하게 작성하여 발주자에게 제출할 것
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal11" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal11')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 국가유산수리 등에 관한 법률 시행규칙 제2조 <br> (성실의무) 「국가유산수리 등에 관한 법률」(이하 “법”이라 한다)
+                                제6조제4호에 따라 국가유산수리, 실측설계 또는 감리(이하 “국가유산수리등”이라 한다)를 하는 자는 국가유산수리등의 기준에 맞게 작성된 설계도서 또는
+                                인문학적ㆍ과학적 조사 및 분석을 통해 수립된 보존처리계획에 따라 국가유산수리등의 업무를 수행해야 한다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역 -->
+                <div class="question">
+                    <p>12. 국가유산수리 등에 관한 법령상 국가유산수리업의 운영 등에 관한 설명으로 옳은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal12')">①</span> 기술적으로
+                            분리하기 어려운 복합된 국가유산수리로서 종된 국가유산수리 예정금액이 3천만원 미만인 부대 국가유산수리는 종된 분야의 국가유산수리업자가 수리한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal12' )">②</span>
+                            국가유산수리업을 양도하려는 자는 그 사실을 30일 이상 공고하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal12')">③</span> 상속인이
+                            국가유산수리업자의 결격사유에 해당하는 경우에는 상속개시일부터 60일 이내에 그 국가유산수리업을 다른 사람에게 양도하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal12')">④</span>
+                            국가유산청장이 국가유산수리 능력을 평가한 경우에는 매년 2월 15일까지 국가유산수리 능력 평가결과 등을 국가유산수리종합정보시스템을 통하여 하여 공시하여야 한다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal12" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal12')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 국가유산수리 등에 관한 법률 제17조 제5항 <br> ⑤ 제1항제1호에 따라 국가유산수리업을 양도하려는 자는
+                                문화체육관광부령으로 정하는 바에 따라 그 사실을 30일 이상 공고하여야 한다.
+                            </p>
+                            <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역 -->
+                <div class="question">
+                    <p>13. 국가유산수리 등에 관한 법령상 하도급에 관한 설명으로 옳지 않은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal13')">①</span> 하수급인은
+                            하도급받은 국가유산수리에 관하여는 발주자에 대하여 수급인과 같은 의무를 진다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal13' )">②</span> 하수급인은
+                            하도급받은 국가유산수리 중 일부를 도급하면 계약을 체결한 날부터 30일 이내에 발주자에게 통보하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal13')">③</span> 수급인은
+                            하수급인으로부터 하도급 국가유산수리의 완료 또는 기성(旣成) 부분의 통지를 받은 경우에는 10일 이내에 이를 확인하기 위한 검사를 하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal13')">④</span> 발주자는
+                            하수급인의 국가유산수리가 관계 법령을 위반하여 하수급인의 변경을 요구하는 경우에는 그 사유가 있음을 안 날부터 15일 이내 또는 그 사유가 있은 날부터 30일 이내에
+                            서면으로 요구하여야 한다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal13" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal13')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 국가유산수리 등에 관한 법률 제25조 제3항 <br> ③ 제1항 단서에 따라 종합국가유산수리업자로부터 국가유산수리의 일부를
+                                하도급받은 전문국가유산수리업자는 이를 다시 하도급할 수 없다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>14. 국가유산수리 등에 관한 법령상 국가유산수리기술자의 배치에 관한 설명으로 옳지 않은 것은?
+                    </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal14')">①</span> 수리
+                            예정금액이 10억원 이상인 임시지정명승에 해당하는 국가유산수리는 자격을 취득한 후 해당 분야에 7년 이상 종사한 국가유산수리기술자를 배치하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal14' )">②</span>
+                            국가유산수리기술자의 현장 배치 확인은 국가유산수리종합정보시스템으로 확인을 받기 어려운 경우 현장배치 확인표에 국가유산수리기술자 경력등 확인서를 첨부하여 발주자 확인을
+                            받을 수 있다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal14')">③</span>
+                            국가유산수리업자는 책임감리를 하는 국가유산수리 현장에 배치된 국가유산수리기술자의 경우 둘 이상의 국가유산수리 현장에 배치할 수 없다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal14')">④</span> 수급인은
+                            배치된 국가유산수리기술자의 업무수행 능력이 현저히 부족하다고 인정되어 발주자가 그 교체를 요청하는 경우 정당한 사유가 없으면 이에 따라야 한다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal14" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal14')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 국가유산수리 등에 관한 법률 시행규칙 제17조 제2항 <br> ② 제1항에 따라 발주자의 확인을 받으려는 자는 법
+                                제14조의3제2항에 따른 국가유산수리종합정보시스템을 통하여 받아야 한다. 다만, 해당 시스템으로 확인을 받기 어려운 경우에는 별지 제23호서식의
+                                국가유산수리기술자 현장 배치 확인표에 별지 제6호의9서식의 국가유산수리기술자등 경력등 확인증명서를 첨부하여 발주자의 확인을 받아야 한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>15. 국가유산수리 등에 관한 법령상 국가유산수리의 설계승인에 관한 설명으로 옳은 것은?
+                    </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal15')">①</span> 발주자는
+                            국가지정문화유산을 수리하려는 경우 국가유산청장, 시.도지정문화유산을 수리하려는 경우 시ㆍ도지사로부터 설계승인을 받아야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal15' )">②</span>
+                            설계승인을 받은 경우에는 국가유산수리 현장을 공개할 수 있다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal15')">③</span>
+                            국가유산수리는 국가유산청장 등으로부터 설계승인을 받은 후 「문화유산의 보존 및 활용에 관한 법률」에 따른 현상변경 등 행위 허가를 받아야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal15')">④</span>
+                            국가유산청장 또는 시ㆍ도지사는 설계승인한 해당 국가유산수리의 개요 등의 정보를 국가유산수리종합정보시스템을 통하여 공개할 수 있다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal15" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal15')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 국가유산수리 등에 관한 법률 제33조의2 제1항 <br> (국가유산수리의 설계승인) ① 발주자는 다음 각 호의 어느 하나에
+                                해당하는 국가유산 등을 수리를 하려는 경우 국가유산청장(「문화유산의 보존 및 활용에 관한 법률」 제2조제3항제2호 및 제3호, 「자연유산의 보존 및 활용에
+                                관한 법률」 제2조제4호에 해당하는 국가유산인 경우에는 “시ㆍ도지사”를 말한다. 이하 이 조부터 제33조의5까지, 제33조의6제1항 및 제2항에서
+                                같다)으로부터 설계승인을 받아야 한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>16. 국가유산수리 등에 관한 법령상 국가유산수리업자의 평가 등에 관한 설명으로 옳은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal16')">①</span>
+                            국가유산수리의 평가는 수리금액이 10억인 임시지정문화유산의 경우 국가유산수리가 80퍼센트 이상 완료된 때에 실시할 수 있다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal16' )">②</span> 우수
+                            국가유산수리업자는 국가유산수리가 완료된 해의 다음 해 6월 30일까지 지정하여야 한다. 우수업자 지정은 1년 동안만 유효하다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal16')">③</span> 평가는
+                            국가유산수리를 발주한 국가유산청장이나 지방자치단체의 장이 지명하는 3명 이상의 관계 공무원(발주자의 소속 직원은 제외한다) 및 관계 전문가가 실시한다. 이 경우 관계
+                            전문가는 둘 이상이 반드시 포함되어야 한다
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal16')">④</span> 평가는
+                            국가유산수리가 완료된 해의 다음 해 1월 31일까지 실시하여야 한다
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal16" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal16')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 국가유산수리 등에 관한 법률 제54조 제2항, 시행규칙 제27조 제2항 <br> ② 국가유산청장이나 지방자치단체의 장은
+                                제1항에 따른 평가결과가 우수한 국가유산수리업자 또는 국가유산실측설계업자에 대하여는 1년 동안 우수업자로 지정할 수 있다.<br>
+                                ② 우수 국가유산수리업자는 국가유산수리가 완료된 해의 다음 해 6월 30일까지 지정하여야 한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>17. 매장유산 보호 및 조사에 관한 법령상 지표조사 보고서에 관한 설명으로 옳은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal17')">①</span> 건설공사
+                            시행자는 매장유산 지표조사를 할 수 있다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal17' )">②</span> 지표조사를
+                            실시한 중앙행정기관의 장은 조사를 마친 날부터 20일 이내에 지표조사 결과 보고서를 국가유산청장에게 제출해야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal17')">③</span>
+                            국가유산청장은 문화유산위원회의 의견을 들어 해당 지표조사 보고서가 적절하게 작성되었는지 검토하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal17')">④</span> 지표조사
+                            결과 매장유산의 존재가 확인된 경우 국가유산청장과 관할 지방자치단체의 장은 해당 지역을 매장유산 유존지역으로서 보호할 수 있다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal17" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal17')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 매장유산 보호 및 조사에 관한 법률 시행령 제5조의2 제3항 <br> ③ 국가등지표조사를 실시한 중앙행정기관의 장이나
+                                지방자치단체의 장은 조사를 마친 날부터 20일 이내에 지표조사 결과 보고서를 국가유산청장에게 제출해야 한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>18. 매장유산 보호 및 조사에 관한 법령상 발견 신고된 국가유산의 보상금과 포상금에 관한 설명으로 옳은 것은?
+                    </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal18')">①</span>
+                            국가유산청장은 발견자나 습득자가 토지 또는 건조물 등의 소유자와 동일인이면 보상금을 균등하게 분할하여 지급한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal18' )">②</span>
+                            국가유산청장은 발견신고자로서 발굴의 원인을 제공한 자에게는 발굴된 국가유산의 가치와 규모를 고려하여 포상금을 지급하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal18')">③</span> 발굴된
+                            국가유산의 평가액이 1억원 이상인 경우 포상금 산정은 2,000만원+(국가유산의 평가액-1억원) × (5/100)에 의한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal18')">④</span> 보상금이나
+                            포상금을 지급하는 경우 국가유산청장은 문화유산위원회의 심의를 거쳐야 한다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal18" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal18')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 매장유산 보호 및 조사에 관한 법률 시행령 제23조 제3항 <br> ③ 법 제21조제3항에 따른 포상금의 지급 기준은 별표
+                                3과 같다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>19. 고도 보존 및 육성에 관한 특별법령상 고도보존육성기본계획에 포함되어야 하는 사항에 해당하지 않는 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal19')">①</span> 고도의
+                            지정ㆍ해제 또는 변경에 관한 사항
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal19' )">②</span>
+                            민간자본을 유치할 필요가 있는 경우 대상 사업과 유치 방안
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal19')">③</span>
+                            보존육성사업 및 주민지원사업의 연도별 추진계획
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal19')">④</span> 이주대책에
+                            관한 사항
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal19" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal19')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 고도 보존 및 육성에 관한 특별법 제8조 제1항 <br> (고도보존육성기본계획의 수립 등) ① 국가유산청장은 고도를 지정하면
+                                5년 단위의 고도보존육성기본계획(이하 “기본계획”이라 한다)을 수립하여야 한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>20. 고도 보존 및 육성에 관한 특별법령상 보존육성사업 등에 관한 설명으로 옳은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal20')">①</span>
+                            사업시행자는 지정지구로 둘러싸여 있거나 지정지구와 연접하여 고도의 역사문화환경을 직접적으로 해할 우려가 있는 토지등을 수용. 사용할 수 있다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal20')">②</span>
+                            사업시행자가 사업에 필요한 토지 등을 수용하는 경우, 사업시행자로 지정된 때에 「공익사업을 위한 토지 등의 취득 및 보상에 관한 법률」에 따른 사업인정 및 사업인정의
+                            고시가 있는 것으로 본다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal20')">③</span> 이 법에
+                            따라 매수를 청구하려는 자는 토지ㆍ건물 등을 본래의 용도로 이용할 수 없게 된 것에 대하여 귀책사유가 없어야 하고, 사업시행자는 매수대상 기준에 해당하는 때에는
+                            매수를 통보한 날부터 5년 이내에 매수하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal20')">④</span>
+                            보존육성사업으로 설치되는 공용ㆍ공공용 시설에 대하여는 ‘개발이익환수에 관한 법률’에 따른 개발부담금을 면제한다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal20" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal20')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 고도 보존 및 육성에 관한 특별법 제19조 제2항, 시행령 제22 제2항, 제22조의2, <br> ② 사업시행자는 제1항에
+                                따른 매수 청구를 받은 토지ㆍ건물 등이 매수대상 기준에 해당하는 때에는 매수하여야 한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>21. 문화유산과 자연환경자산에 관한 국민신탁법령상 국민신탁법인이 해당중앙행정기관의 장의 승인을 얻어야 하는 경우에 해당하지 않은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal21')">①</span>
+                            국민신탁법인이 정관을 변경하고자 하는 경우
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal21' )">②</span>
+                            국민신탁법인이 보전재산을 이용하는 사람들에게 부과. 징수하려는 이용료 또는 입장료를 정하려는 경우
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal21')">③</span>
+                            국민신탁법인이 문화유산 및 자연환경자산의 매입ㆍ보전ㆍ관리를 위하여 모금을 하려는 경우
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal21')">④</span>
+                            국민신탁법인이 매 회계연도 종료 전까지 제출하는 다음 회계연도의 사업계획 및 예산안의 경우
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal21" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal21')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산과 자연환경자산에 관한 국민신탁법 제4조 제2항 <br> ② 국민신탁법인은 정관을 변경하고자 하는 때에는
+                                해당중앙행정기관의 장(문화유산국민신탁의 경우에는 국가유산청장을, 자연환경국민신탁의 경우에는 환경부장관을 말한다. 이하 같다)의 인가를 받아야 한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>22. 문화유산과 자연환경자산에 관한 국민신탁법령상 보전협약 등에 관한 내용으로 옳지 않는 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal22')">①</span>
+                            국민신탁법인은 보전협약을 체결하고 소유자ㆍ점유자 또는 대리인이 해당 문화유산 및 자연환경자산을 성실하게 보전ㆍ관리할 수 있도록 필요한 지원을 하거나 해당 문화유산 및
+                            자연환경자산을 대차하여 직접 보전활동을 할 수 있다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal22' )">②</span>
+                            보전협약의 내용 및 체결방법ㆍ절차 등에 관하여 필요한 사항은 정관으로 정한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal22')">③</span>
+                            국민신탁단체는 보전협약을 체결하여 보전활동을 할 수 있다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal22')">④</span>
+                            국민신탁운동협의체와 보전협약을 체결한 소유자 등은 해당 재산의 권리관계가 변동되었거나 변동될 것으로 예상되는 때에는 그 사실을 지체 없이 해당중앙행정기관의 장에게
+                            통지하여야 한다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal22" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal22')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산과 자연환경자산에 관한 국민신탁법 제20조 <br> 국민신탁법인과 보전협약을 체결한 문화유산 및 자연환경자산의
+                                소유자ㆍ점유자 또는 대리인은 해당 재산의 권리관계가 변동되었거나 변동될 것으로 예상되는 때에는 그 사실을 지체 없이 국민신탁법인에 통지하여야 한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>23. 무형유산의 보전 및 진흥에 관한 법령상 사용하는 용어의 뜻에 관한 설명으로 옳은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal23')">①</span>
+                            “전수교육”이란 국가무형유산의 보전 및 진흥을 위하여 보유자 및 명예보유자, 보유단체, 전승교육사, 전수교육학교가 실시하는 교육을 말한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal23' )">②</span>
+                            전승교육사는 명예보유자가 될 수 있다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal23')">③</span>
+                            “전승공예품”이란 무형유산 중 전통지식 분야의 보유자가 해당 지식을 사용하여 제작한 것을 말한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal23')">④</span>
+                            “전승공동체”란 국가무형유산의 특성상 전승자를 인정하기 어려운 경우에 해당한다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal23" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal23')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 무형유산의 보전 및 진흥에 관한 법률 제18조 제2항 <br> ② 국가유산청장은 국가무형유산의 전승교육사가 다음 각 호의 어느
+                                하나에 해당하는 경우 전형의 수준과 전승활동 업적을 고려하여 위원회의 심의를 거쳐 명예보유자로 인정할 수 있다. 이 경우 국가무형유산 전승교육사가 명예보유자로
+                                인정되면 그 때부터 전승교육사의 인정은 해제된 것으로 본다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>24. 무형유산의 보전 및 진흥에 관한 법령상 국가무형유산의 보유자, 보유단체 등의 인정에 관한 설명으로 옳지 않은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal24')">①</span>
+                            국가유산청장은 무형유산위원회의 심의를 거쳐 국가무형유산의 보유자, 보유단체, 명예보유자 및 전승교육사의 인정을 위한 조사계획을 매년 1월 31일까지 수립해야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal24' )">②</span>
+                            국가유산청장은 조사계획을 30일 이상 국가유산청의 인터넷 홈페이지에 공고해야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal24')">③</span>
+                            국가유산청장은 국가무형유산을 지정하는 경우 해당 국가무형유산의 보유자, 보유단체를 인정하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal24')">④</span>
+                            국가유산청장은 국가무형유산의 보유자, 보유단체, 명예보유자 또는 전승교육사의 인정을 취소하려면 청문을 해야 하고 필요한 경우 관계 전문가 등에게 해당 무형유산에 대한
+                            조사를 요청할 수 있다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal24" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal24')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 무형유산의 보전 및 진흥에 관한 법률 시행규칙 제2조 제1항 <br> (국가무형유산의 지정 등을 위한 조사계획의 수립) ①
+                                국가유산청장은 「무형유산의 보전 및 진흥에 관한 법률」(이하 “법”이라 한다) 제9조에 따른 무형유산위원회(이하 “위원회”라 한다)의 심의를 거쳐 법
+                                제12조에 따른 국가무형유산의 지정 및 법 제17조에 따른 국가무형유산의 보유자, 보유단체의 인정을 위한 조사계획을 매년 1월 31일까지 수립해야 한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>25. 무형유산의 보전 및 진흥에 관한 법령상 전수장학생의 선정 등에 관한 설명 중 옳지 않은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal25')">①</span>
+                            국가유산청장은 전수교육을 6개월 이상 받은 사람 중에서 해당 국가무형유산 보유자, 보유단체 또는 전수교육학교의 추천을 받아 장학금을 지급할 수 있다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal25' )">②</span> 장학금을
+                            지급하려면 장학금을 지급할 국가무형유산의 분야별 종목을 미리 선정하여야 한다
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal25')">③</span> 분야별
+                            종목을 미리 선정하려면 위원회의 심의를 거쳐야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal25')">④</span>
+                            전수장학생에 대한 장학금은 매월 지급하되, 그 지급기간은 5년으로 한다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal25" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal25')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 무형유산의 보전 및 진흥에 관한 법률 제27조 제1항 <br> (전수장학생) ① 국가유산청장은 국가무형유산의
+                                전수교육(제30조에 따른 대학등에서의 전수교육은 제외한다. 이하 이 조에서 같다)을 받은 사람 중에서 국가무형유산 보유자 또는 보유단체의 추천을 받아
+                                전수장학생을 선정하여 장학금을 지급할 수 있다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역 -->
+                <div class="question">
+                    <p>1-1. 문화유산의 보존 및 활용에 관한 법령상 유형문화유산의 대상이 아닌 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-1')">①</span> 건조물
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-1')">②</span>
+                            전적(典籍: 글과 그림을 기록하여 묶은 책)
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal1-1')">③</span>
+                            역사적ㆍ경관적 또는 학술적 가치가 큰 기념물
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-1')">④</span>
+                            고고자료(考古資料)
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal1-1" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal1-1')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 제2조 제1항 제1호 <br> 1. 유형문화유산: 건조물, 전적(典籍: 글과 그림을
+                                기록하여 묶은 책), 서적(書跡), 고문서, 회화, 조각, 공예품 등 유형의 문화적 소산으로서 역사적ㆍ예술적 또는 학술적 가치가 큰 것과 이에 준하는
+                                고고자료(考古資料)
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역 -->
+                <div class="question">
+                    <p>1-2. 문화유산의 보존 및 활용에 관한 법령상 문화유산 관리 등 업무를 위한 전문인력의 배치 등에 관한 내용으로 옳은 것은?
+                    </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-2')">①</span>
+                            전문인력의 배치에 관한 사항은 문화유산기본계획이다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-2' )">②</span>
+                            지방자치단체의 장은 해당 기관의 문화유산 업무를 수행할 전담부서를 설치하고 문화유산전담관을 위촉하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal1-2')">③</span> 문화유산
+                            관련 법령에 따른 관할 지역 문화유산의 조사ㆍ연구 추진은 전문인력의 업무에 해당한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-2')">④</span>
+                            전담부서에 배치되는 전문인력은 문화유산 관련 업무를 1년 6개월 이상 수행한 공무원이어야 한다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal1-2" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal1-2')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 시행령 제2조의2 제3항 <br> ③ 문화유산 관리 전문인력은 해당 지방자치단체에서
+                                문화유산 업무를 담당하는 다음 각 호의 어느 하나에 해당하는 공무원을 말한다.
+                            </p>
+                            <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역 -->
+                <div class="question">
+                    <p>1-3. 문화유산의 보존 및 활용에 관한 법령상 문화유산 보존 시행계획 수립 등에 관한 설명으로 옳은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal1-3')">①</span> 시ㆍ도지사
+                            외 국가유산청장도 기본계획에 관한 연도별 시행계획(이하 “시행계획”이라 한다)을 수립ㆍ시행하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-3' )">②</span>
+                            시행계획에는 문화유산 관리 전문인력의 배치에 관한 사항이 포함되지 않는다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-3')">③</span>
+                            시ㆍ도지사는 해당 연도의 시행계획 및 전년도의 추진실적을 매년 12월 31일까지 국가유산청장에게 제출하여야 한다. 이 경우 관한 시,군,구청장의 의견서를 첨부하여야
+                            한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-3')">④</span>
+                            국가유산청장은 해당 연도의 시행계획을 매년 1월 31일까지 국가유산청 및 해당 시ㆍ도의 게시판과 인터넷 홈페이지를 통하여 공고해야 한다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal1-3" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal1-3')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 시행령 제7조 제1항 <br> (문화유산 보존 시행계획 수립) ① 국가유산청장 및
+                                시ㆍ도지사는 기본계획에 관한 연도별 시행계획(이하 “시행계획”이라 한다)을 수립ㆍ시행하여야 한다. 이 경우 시행계획에는 다음 각 호의 사항이 포함되어야 한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>1-4. 문화유산의 보존 및 활용에 관한 법령상 문화유산 기초조사에 관한 설명으로 옳은 것은?
+                    </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-4')">①</span>
+                            국가유산청장이 직접 기초조사를 하려면 조사 경위 등 조사에 관한 전반적인 사항이 포함된 조사계획서를 조사 착수 전까지 작성하여 관할 시.도지사에게 통보하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-4' )">②</span>
+                            지정문화유산이 아닌 문화유산에 대하여 조사할 경우에는 해당 문화유산의 소유자 또는 관리자에게 미리 그 뜻을 알려야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-4')">③</span>
+                            국가유산청장을 제외한 중앙행정기관의 장은 기초조사를 할 수 없다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal1-4')">④</span>
+                            지방자치단체의 장은 조사가 끝난 후 60일 안에 결과보고서를 작성하여 국가유산청장에게 제출하여야 한다
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal1-4" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal1-4')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 시행령 제6조 제4항 <br> ④ 중앙행정기관의 장(국가유산청장은 제외한다) 또는
+                                지방자치단체의 장은 법 제10조제1항에 따른 조사가 끝난 후 60일 안에 제3항 각 호의 사항이 포함된 결과보고서를 작성하여 국가유산청장에게 제출하여야 한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>1-5. 문화유산의 보존 및 활용에 관한 법령상 건설공사에 관한 설명으로 옳은 것은? (준용이나 위임 규정은 고려하지 않는다)
+                    </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal1-5')">①</span> 전기공사는
+                            지표의 원형을 변형하는 경우에만 건설공사에 해당한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-5' )">②</span>
+                            건설공사로 인하여 문화유산이 수몰될 우려가 있을 때에는 그 건설공사의 시행자는 시ㆍ도지사의 지시에 따라 필요한 조치를 하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-5')">③</span>
+                            역사문화환경 보존지역의 범위는 지정문화유산의 외곽 경계로부터 500미터를 초과하여 정할 수 없다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-5')">④</span>
+                            역사문화환경 보존지역에서 수목을 제거하는 공사는 건설공사에 해당하지 않는다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal1-5" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal1-5')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 시행령 제2조 <br> 법 제2조제8항에서 “대통령령으로 정하는 공사”란 다음 각 호의
+                                공사를 말한다. 다만, 제2호부터 제4호까지의 공사는 지표(地表)의 원형을 변형하는 경우만 해당한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>1-6. 문화유산의 보존 및 활용에 관한 법령상 “역사문화환경 보존지역”(이하 보존지역이라 한다.)의 보호에 관한 설명으로 옳은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-6')">①</span>
+                            시ㆍ도지사는 동산에 속하는 문화유산을 제외한 지정문화유산의 역사문화환경 보호를 위하여 국가유산청장과 협의하여 조례로 보존지역을 정할 수 있다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-6' )">②</span>
+                            국가유산청장이 정하는 보존지역에서의 구체적 행위기준은 역사문화환경을 보호하기 위한 것이다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-6')">③</span>
+                            건설공사의 인허가 행정기관은 보존지역에서 시행하는 건설공사에 관하여는 인가ㆍ허가 등을 하기 전에 「국가유산영향진단법」에 따른 영향진단을 실시하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal1-6')">④</span>
+                            시ㆍ도지사가 보존지역에서 지정문화유산의 보존에 영향을 미칠 우려가 있는 행위에 관한 구체적인 행위기준을 정하는 경우 지정문화유산의 지정 고시가 있는 날부터 6개월 안에
+                            하여야 한다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal1-6" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal1-6')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 제13조 제5항 <br> ⑤ 국가유산청장이 국가지정문화유산을 지정하거나 시ㆍ도지사가
+                                시ㆍ도지정문화유산 및 문화유산자료를 지정하면 그 지정 고시가 있는 날부터 6개월 안에 역사문화환경 보존지역에서 지정문화유산의 보존에 영향을 미칠 우려가 있는
+                                행위에 관한 구체적인 행위기준을 정하여 고시하여야 한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>1-7. 문화유산의 보존 및 활용에 관한 법령상 화재, 풍수해, 재난 및 도난(이하 “화재등”이라 한다) 대응매뉴얼 마련 등에 관한 설명으로 옳은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-7')">①</span> 소유자,
+                            관리자 또는 관리단체는 해당 지정문화유산 및 등록문화유산의 특성에 따른 화재등 대응매뉴얼을 마련하여 국가유산청장 및 시ㆍ도지사에게 제출하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal1-7' )">②</span>
+                            시ㆍ도지사는 보완한 대응매뉴얼을 보완한 날부터 15일 이내에 국가유산청장에게 제출하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-7')">③</span>
+                            등록문화유산 중 동산에 해당하는 문화유산은 그 대상이 아니다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-7')">④</span>
+                            지정문화유산 중 분묘(墳墓)는 그 대상에 해당하지 아니한다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal1-7" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal1-7')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 시행령 제8조 제4항 <br> ④ 국가유산청장 및 시ㆍ도지사는 제1항 및 제2항에 따른
+                                대응매뉴얼을 연 1회 이상 점검ㆍ보완하여야 한다. 이 경우 시ㆍ도지사는 보완한 대응매뉴얼을 보완한 날부터 15일 이내에 국가유산청장에게 제출하여야 한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>1-8. 문화유산의 보존 및 활용에 관한 법령상 문화유산 전문인력의 양성과 관련하여 장학금 지급의 중지 또는 반환 등에 관한 설명으로 옳지 않은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-8')">①</span>
+                            국가유산청장은 수학이나 연구의 중단, 내용변경, 실적저조 등 문화체육관광부령으로 정하는 사유가 발생하면 장학금 지급을 중지하거나 반환을 명할 수 있다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-8' )">②</span> “학업
+                            및 연구 성적이 매우 불량한 경우”는 장학금 지급의 중지 사유에 해당한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal1-8')">③</span> 장학금을
+                            지급받고 있는 사람이 “본인의 성명ㆍ주소 등이 변경된 경우” 지체없이 신고하지 않으면 장학금 지급이 중지될 수 있다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-8')">④</span>
+                            국가유산청장은 장학금을 받아 교육이나 연구를 마친 사람이 교육이나 연구를 마친 날부터 1개월 안에 교육수료 증명서 또는 연구보고서(전자문서로 된 보고서를 포함한다)를
+                            제출하지 않은 경우 장학금의 반환을 명할 수 있다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal1-8" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal1-8')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 시행규칙 제6조 제1항 제1호 <br> (장학금 지급의 중지 또는 반환) ① 법 제16조
+                                제5항에서 “문화체육관광부령으로 정하는 사유”란 다음 각 호의 어느 하나의 사유를 말한다.
+                                1. 제5조제2항제1호부터 제3호까지의 사유 중 어느 하나에 해당하는 경우
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>1-9. 문화유산의 보존 및 활용에 관한 법령상 문화유산교육지원센터의 지정 등에 관한 설명으로 옳지 않은 것은?
+                    </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal1-9')">①</span>
+                            국가유산청장은 지정 여부를 결정할 때에는 최근 3년간 문화유산교육을 실시한 실적을 고려여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-9' )">②</span>
+                            국가유산청장은 업무수행능력이 현저히 부족하다고 인정하는 경우 그 지정을 취소하거나 6개월의 범위에서 그 업무의 정지를 명할 수 있다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-9')">③</span>
+                            문화유산교육지원센터는 소외계층 등 지역주민에 대한 문화유산교육 등 사업을 수행한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-9')">④</span>
+                            문화유산국민신탁은 문화유산교육업무를 수탁받을 수 있는 기관이다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal1-9" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal1-9')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 시행령 제10조의3 제3항 <br> ③ 국가유산청장은 제2항에 따라 지정 여부를 결정할
+                                때에는 최근 3년간 문화유산교육을 실시한 실적을 고려할 수 있다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>1-10. 문화유산의 보존 및 활용에 관한 법령상 사적의 유형별 분류기준에 해당하지 않은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-10')">①</span>
+                            조개무덤, 주거지, 취락지 등의 선사시대 유적
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal1-10' )">②</span> 분묘
+                            등의 유구(遺構: 옛 구조물의 흔적) 또는 그 건조물 및 부속물에 관한 유적
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-10')">③</span> 궁터,
+                            관아, 성터, 성터시설물, 병영, 전적지(戰蹟地) 등의 정치ㆍ국방에 관한 유적
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-10')">④</span> 서원,
+                            향교, 학교, 병원, 사찰, 절터, 교회, 성당 등의 교육ㆍ의료ㆍ종교에 관한 유적
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal1-10" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal1-10')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 시행령 제11조 제1항 <br> (국가지정문화유산의 지정기준 및 절차) ① 법 제23조에
+                                따른 국보와 보물, 법 제25조에 따른 사적 및 법 제26조에 따른 국가민속문화유산의 지정기준은 별표 1의2와 같다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역 -->
+                <div class="question">
+                    <p>1-11. 문화유산의 보존 및 활용에 관한 법령상 보호물 또는 보호구역의 지정에 관한 설명으로 옳지 않은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-11')">①</span>
+                            국가유산청장은 국보, 보물, 사적 및 국가민속문화유산의 보호물 또는 보호구역을 지정하려면 관계 전문가 3명 이상에게 조사를 요청해야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-11')">②</span>
+                            국가유산청장은 조사보고서를 검토하여 지정할 가치가 있다고 판단되면 문화유산위원회의 심의 전에 관보에 30일 이상 예고하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-11')">③</span>
+                            국가유산청장은 예고가 끝난 날부터 6개월 안에 문화유산위원회의 심의를 거쳐 지정 여부를 결정하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal1-11')">④</span>
+                            국가유산청장은 부득이한 사유로 6개월 안에 지정 여부를 결정하지 못한 경우에 그 지정 여부를 다시 결정할 필요가 있으면 예고 및 지정 절차를 다시 거쳐야 한다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal1-11" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal1-11')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 시행령 제13조 제3항 <br> ③ 제1항에 따른 국보, 보물, 사적 및
+                                국가민속문화유산의 보호물 또는 보호구역의 지정에 관하여는 제11조제2항부터 제5항까지의 규정을 준용한다.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역 -->
+                <div class="question">
+                    <p>1-12. 문화유산의 보존 및 활용에 관한 법령상 문화유산별 종합정비계획에 관한 설명이다. 옳지 않은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-12')">①</span>
+                            지방자치단체는 정비계획을 수립할 수 있다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal1-12' )">②</span>
+                            문화유산위원회의 심의를 거쳐야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-12')">③</span>
+                            국가지정문화유산의 원형을 보존하는데 중점을 두어야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-12')">④</span>
+                            국가지정문화유산의 역사문화환경에 관한 사항을 포함하여야 한다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal1-12" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal1-12')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 시행령 제20조 제1항 <br> (문화유산별 종합정비계획의 수립) ① 법 제34조에 따라
+                                국가지정문화유산을 관리하도록 지정된 관리단체는 해당 국가지정문화유산의 효율적인 보존ㆍ관리 및 활용을 위하여 국가유산청장과 협의하여 문화유산별 종합정비계획(이하
+                                이 조에서 “정비계획”이라 한다)을 수립할 수 있다.
+                            </p>
+                            <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역 -->
+                <div class="question">
+                    <p>1-13. 문화유산의 보존 및 활용에 관한 법령상 일반동산문화유산의 범위에 해당하지 않는 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-13')">①</span>
+                            회화류, 조각류, 공예류, 서예류, 석조류 등 미술 분야
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-13' )">②</span>
+                            서책(書冊)류, 문서류, 서각(書刻: 글과 그림을 새겨 넣는 것)류 등 전적(典籍) 분야
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal1-13')">③</span>
+                            증답용구(贈答用具: 편지 등을 주고 받는 데 쓰는 용구), 경방용구(警防用具: 경계ㆍ방어하는 데 쓰는 용구), 형벌용구 등 사회생활 분야
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-13')">④</span>
+                            고고자료, 민속자료, 과학기술자료 등 생활기술 분야
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal1-13" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal1-13')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 시행령 제36조 <br> (일반동산문화유산의 범위) 법 제60조제1항에 따른
+                                일반동산문화유산의 범위는 다음 각 호의 분야에 해당하는 동산 중 별표 3의 기준을 충족하는 것으로 한다. 다만, 수출일 또는 반출일 현재 생존해 있는 제작자의
+                                작품은 일반동산문화유산의 범위에서 제외한다.
+                            </p>
+                            <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>1-14. 문화유산의 보존 및 활용에 관한 법령상 국유문화유산의 특례에 관한 설명으로 옳지 않은 것은?
+                    </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-14')">①</span> 국유에
+                            속하는 문화유산은 국가유산청장이 관리ㆍ총괄한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-14' )">②</span>
+                            국가유산청장이 관리를 위하여 국유문화유산을 소속을 달리하는 회계로부터 관리전환을 받을 때에는 무상으로 할 수 있다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal1-14')">③</span>
+                            국가유산청장이 관계 기관의 장 등과 협의하여 국유문화유산의 관리청을 정할 때에는 문화유산위원회의 심의를 거쳐야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-14')">④</span>
+                            국유문화유산은 이를 양도하거나 사권(私權)을 설정할 수 없음이 원칙이다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal1-14" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal1-14')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 제62조 제2항 <br> ② 국가유산청장은 제1항 단서에 따라 관리청을 정할 때에는
+                                문화유산위원회의 의견을 들어야 한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>1-15. 문화유산의 보존 및 활용에 관한 법령상 지역문화유산돌봄센터의 종사자에 대한 전문교육에 관한 설명으로 옳지 않은 것은?
+                    </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-15')">①</span>
+                            전문교육에는 문화유산의 일상적인 관리 방법 및 경미한 손상의 수리 방법이 포함된다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-15' )">②</span>
+                            지역문화유산돌봄센터 종사자에 대한 전문교육의 관리ㆍ지원은 전통건축수리기술진흥재단에 위탁한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal1-15')">③</span>
+                            시ㆍ도지사는 전문교육에 관한 연간계획을 수립하고 매년 1월 31일까지 지역문화유산돌봄센터의 장에게 알려야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal1-15')">④</span>
+                            전문교육을 위탁받은 기관의 장은 전문교육을 실시하려는 경우에는 교육일시, 교육장소 등 교육 실시에 필요한 사항을 그 교육 실시 30일 전까지 전문교육기관의 인터넷
+                            홈페이지 등에 공고해야 한다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal1-15" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal1-15')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산의 보존 및 활용에 관한 법률 시행규칙 제58조의2 제3항 <br> ③ 국가유산청장은 전문교육에 관한 연간계획을
+                                수립하고 매년 1월 31일까지 지역문화유산돌봄센터의 장에게 알려야 한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>2-1. 「문화유산위원회 규정」중 문화유산위원회등의 위원 또는 전문위원의 해촉 사유에 해당하지 않는 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal2-1')">①</span>
+                            시ㆍ도문화유산위원회의 위원으로 위촉된 경우
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal2-1' )">②</span> 위원이
+                            국가유산수리업자, 국가유산실측설계업자, 국가유산감리업자가 된 경우
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal2-1')">③</span> 해당
+                            안건의 당사자 신청에 따라 문화유산위원회 의결로 위원이 기피 결정된 경우
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal2-1')">④</span> 위원이
+                            직무와 관련하여 부당하게 영향력을 행사하거나, 부정한 청탁을 받는 등 윤리규정에 위반한 경우
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal2-1" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal2-1')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산위원회 규정 제12조 <br> (해촉) 국가유산청장은 위원회등의 위원 또는 전문위원이 다음 각 호의 어느 하나에
+                                해당하는 경우에는 해촉할 수 있다.<br>
+                                참조 ; 제10조 ② 해당 안건의 당사자는 위원에게 공정한 심의ㆍ의결을 기대하기 어려운 사정이 있는 경우에는 위원회등에 기피신청을 할 수 있고, 위원회등은
+                                의결로 기피 여부를 결정해야 한다. 이 경우 기피 신청의 대상인 위원은 그 의결에 참여할 수 없다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>2-2. 「문화유산위원회 규정」중 분장사항에서 「자연유산의 보존 및 활용에 관한 법률」에 따른 심의 사항을 제외하는 분과위원회가 아닌 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal2-2')">①</span>
+                            건축문화유산분과위원회
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal2-2' )">②</span>
+                            매장유산분과위원회
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal2-2')">③</span>
+                            세계유산분과위원회
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal2-2')">④</span>
+                            궁능문화유산분과위원회
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal2-2" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal2-2')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 문화유산위원회 규정 제5조 <br> (분과위원회와 분장사항) 법 제8조제3항에 따라 위원회에 두는 분과위원회와 그 분장사항은
+                                다음 각 호와 같다
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>3-1. 자연유산의 보존 및 활용에 관한 법령상 자연유산 보호계획에 관한 설명이다. 옳지 않은 것은?
+                    </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3-1')">①</span>
+                            국가유산청장은 보호계획의 효율적 수립, 변경을 위하여 자문단을 운영할 수 있다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3-1' )">②</span>
+                            국가유산청장은 보호계획 중 자연유산의 유형별 보존ㆍ관리를 위한 주요 추진과제를 변경하는 경우 소유자등 및 관계 전문가의 의견을 들어야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3-1')">③</span>
+                            국가유산청장은 보호계획을 수립ㆍ변경한 경우에는 관계 중앙행정기관의 장에게 이를 통보해야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal3-1')">④</span>
+                            시ㆍ도지사는 보호계획을 시ㆍ도의 게시판과 인터넷 홈페이지를 통해 공표해야 한다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal3-1" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal3-1')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 자연유산의 보존 및 활용에 관한 법률 시행령 제3조 제3항 <br> ③ 국가유산청장 및 시ㆍ도지사는 법 제7조제3항에 따라
+                                해당 연도의 시행계획을 매년 2월 말일까지 국가유산청 및 해당 특별시ㆍ광역시ㆍ특별자치시ㆍ도 또는 특별자치도(이하 “시ㆍ도”라 한다)의 게시판과 인터넷
+                                홈페이지를 통해 공표해야 한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>3-2. 자연유산의 보존 및 활용에 관한 법령상 관리단체로 지정된 지방자치단체로 부터 천연기념물 또는 명승의 관리 업무를 수탁받을 수 있는 법인 또는 단체에 해당하지 않은
+                        것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3-2')">①</span>
+                            「고등교육법」에 따른 학교와 그 부설기관
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal3-2' )">②</span> 「박물관
+                            및 미술관 진흥법」에 따른 국ㆍ공립 박물관 및 국ㆍ공립 미술관
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3-2')">③</span>
+                            「과학기술분야 정부출연연구기관 등의 설립ㆍ운영 및 육성에 관한 법률」에 따른 한국지질자원연구원
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3-2')">④</span> 「동물원
+                            및 수족관의 관리에 관한 법률」 에 따라 허가를 받은 동물원 또는 수족관
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal3-2" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal3-2')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 자연유산의 보존 및 활용에 관한 법률 시행령 제36조 제1항 <br> (관리 업무의 위탁) ① 법 제26조제1항 및 제2항에
+                                따라 관리단체로 지정된 지방자치단체는 같은 조 제3항에 따라 해당 천연기념물 또는 명승의 관리 업무의 전부 또는 일부를 다음 각 호의 어느 하나에 해당하는
+                                법인 또는 단체에 위탁할 수 있다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>3-3. 자연유산의 보존 및 활용에 관한 법령상 정기조사와 추가조사 업무를 수탁받을 수 있는 법인 또는 단체에 해당하지 않은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3-3')">①</span>
+                            「고등교육법」에 따른 학교의 자연유산 관련 부설 연구기관 또는 산학협력단
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3-3')">②</span>
+                            「생물자원관의 설립 및 운영에 관한 법률」에 따른 생물자원관
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3-3')">③</span>
+                            「과학기술분야 정부출연연구기관 등의 설립ㆍ운영 및 육성에 관한 법률」에 따른 한국지질자원연구원
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal3-3')">④</span> 「동물원
+                            및 수족관의 관리에 관한 법률」 에 따라 허가를 받은 동물원 또는 수족관
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal3-3" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal3-3')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 자연유산의 보존 및 활용에 관한 법률 시행령 제38조 제1항 <br> (정기조사 등의 위탁) ① 국가유산청장은 법
+                                제28조제6항에 따라 천연기념물 또는 명승의 정기조사와 추가조사 업무를 다음 각 호의 어느 하나에 해당하는 기관 또는 단체에 위탁할 수 있다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>3-4. 자연유산의 보존 및 활용에 관한 법령상 천연기념물인 동물의 질병관리 등에 관한 설명으로 옳은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3-4')">①</span>
+                            천연기념물 동물치료소는 문화체육관광부령으로 정하는 바에 따라 해당 천연기념물의 연도별 질병관리계획을 수립ㆍ시행하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3-4' )">②</span>
+                            천연기념물 동물치료소는 질병관리계획을 매년 1월 31일까지 국가유산청장에게 제출하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal3-4')">③</span>
+                            천연기념물인 동물의 소유자등은 전염병 등 질병예방을 위하여 전염병 예방접종 등을 시행하여야 한다.
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3-4')">④</span>
+                            천연기념물인 동물의 소유자등은 살처분 명령을 받았으나 격리 등의 조치를 통하여 전염의 우려가 없고 치료가 가능한 경우에는 해당 시장ㆍ군수ㆍ구청장에게 살처분의 제외
+                            또는 연기를 요청할 수 있다.
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal3-4" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal3-4')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 자연유산의 보존 및 활용에 관한 법률 제31조 제4항 <br> ④ 천연기념물인 동물의 소유자등 및 제34조제3항에 따라
+                                위탁받은 전문기관은 전염병 등 질병예방을 위하여 다음 각 호의 사항을 시행하여야 한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>3-5. 자연유산의 보존 및 활용에 관한 법령상 천연기념물인 동물의 소유자등이 수립ㆍ시행하는 연도별 질병관리계획에 포함되어야 하는 사항이 아닌 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3-5')">①</span> 전염병의
+                            예방접종에 관한 사항
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3-5' )">②</span>
+                            정기적인 질병진단 및 기생충 방제에 관한 사항
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal3-5')">③</span> 감염병
+                            예방 및 확산 방지를 위한 방역 조치 및 살처분에 관한 사항
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3-5')">④</span>
+                            방역관리대장 작성ㆍ비치에 관한 사항
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal3-5" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal3-5')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 자연유산의 보존 및 활용에 관한 법률 시행규칙 제19조 제3호 <br> (연도별 질병관리계획 수립 등) 법 제31조제2항에
+                                따라 천연기념물인 동물의 소유자등이 수립ㆍ시행하는 연도별 질병관리계획에는 다음 각 호의 사항이 포함되어야 한다.<br>
+                                3. 감염병 예방 및 확산 방지를 위한 방역 조치에 관한 사항
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+                <!-- 2번 문제 영역 -->
+                <div class="question">
+                    <p>3-6. 자연유산의 보존 및 활용에 관한 법령상 5년 이하의 징역이나 5천만원 이하의 벌금(가장 중한 범죄행위)에 처해지는 행위자에 해당하지 않은 것은? </p>
+                    <div class="choices">
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3-6')">①</span> 이 법을
+                            위반하여 허가 없이 천연기념물 또는 명승에 영향을 미칠 우려가 있는 행위를 한 자
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3-6' )">②</span> 이
+                            법을 위반하여 허가 없이 천연기념물 또는 명승으로 지정 또는 임시지정된 구역(보호구역을 포함한다)에서 동물, 식물, 광물을 포획ㆍ채취하거나 이를 그 구역 밖으로
+                            반출하는 행위를 한 자
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(false, 'answerModal3-6')">③</span> 이 법을
+                            위반하여 허가 없이 해당 천연기념물과 동일한 종을 관리구역 내로 반입한 자
+                        </div>
+                        <div class="choice">
+                            <span class="choice-button" onclick="openAnswerModal(true, 'answerModal3-6')">④</span> 이 법을
+                            위반하여 허가 없이 천연기념물 또는 명승의 보존에 영향을 미칠 수 있는 탁본, 촬영 등 대통령령으로 정하는 행위를 한 자
+                        </div>
+                    </div>
+                </div>
+                <!-- 문제 영역이 끝나는 부분 아래에 배치 -->
+                <div id="answerModal3-6" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <span id="answerText">정답입니다!</span> <!-- 좌측 정답 여부 표시 -->
+                            <button class="confirm-button" onclick="closeModal('answerModal3-6')">확인</button>
+                            <!-- 우측 끝 확인 버튼 -->
+                        </div>
+                        <!-- 하단 텍스트 영역을 아래에 배치 -->
+                        <div class="modal-body">
+                            <p id="lawText">법조문 ; 자연유산의 보존 및 활용에 관한 법률 제66조 <br> (벌칙) 다음 각 호의 어느 하나에 해당하는 자는 5년 이하의 징역이나
+                                5천만원 이하의 벌금에 처한다.
+                            </p> <!-- 법조문 표시 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+</body>
+
+</html>
